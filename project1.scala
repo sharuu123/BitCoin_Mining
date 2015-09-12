@@ -17,7 +17,7 @@ object project1 {
 		case class SearchBitcoins()
 		case class StartWork(startrange: Int, endrange:Int)
 		case class WorkDone(list:StringBuilder)
-		case class Consolidate(list: StringBuilder)
+		case class Consolidate(list: StringBuilder, remoteCount: Int)
 		case class RemoteWorkDone(list: StringBuilder)
 		case class PrintBitcoins(masterList: StringBuilder)
 		case class ShutDown(masterList: StringBuilder, ipAddress: String)
@@ -51,8 +51,10 @@ object project1 {
 				case SendTargetZeros() =>
 					sender ! StartMining(targetZeroes)
 
-				case Consolidate(list: StringBuilder) =>
+				case Consolidate(list: StringBuilder, remoteCount: Int) =>
+					count += remoteCount
 					masterList.append(list)
+					println("Got " + remoteCount + " BitCoins from remote master")
 					
 				case "STOP" =>
 					println(masterList)
@@ -73,6 +75,7 @@ object project1 {
 
 			def receive = {
 				case AskMaster() =>
+					println("Ask master for target zeros")
 					masterActor ! SendTargetZeros()
 
 				case StartMining(targetZeroes: Int) => 
@@ -88,7 +91,7 @@ object project1 {
 
 				case "REMOTE_STOP" =>
 					val masterActor = context.actorFor("akka.tcp://RemoteMasterSystem@" + ipAddress + ":2552/user/master")
-					masterActor ! Consolidate(masterList)
+					masterActor ! Consolidate(masterList,count)
 					context.system.shutdown()
 			}
 
@@ -143,7 +146,7 @@ object project1 {
 				remote{
 					enabled-transports = ["akka.remote.netty.tcp"]
 					netty.tcp {
-						hostname = "127.0.0.1"
+						hostname = "192.168.2.3"
 						port = 2552
 					}
 				}
