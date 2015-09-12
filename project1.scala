@@ -6,17 +6,13 @@ import akka.actor.Props
 import akka.actor.PoisonPill
 import akka.actor._
 import com.typesafe.config.ConfigFactory
-import scala.collection.mutable.ArrayBuffer
-import akka.remote.RemoteActorRefProvider
 import scala.concurrent.duration.Duration
 import java.util.concurrent.TimeUnit
 import scala.concurrent.duration._
 
 object project1 {
+	var count: Int = _
 	def main(args: Array[String]){
-		println(sha256("sarojini!!!!!HAVHgogfflalfbalffFIFfGAIS"))
-		// var timer: Boolean = true
-		// var actorList: ArrayBuffer[ActorRef] = new ArrayBuffer[ActorRef]
 
 		case class SearchBitcoins()
 		case class StartWork(startrange: Int, endrange:Int)
@@ -29,7 +25,7 @@ object project1 {
 		case class StartMining(targetZeroes: Int)
 		case class SendTargetZeros()
 		
-		// Four type of actors - Master, RemoteMaster, Worker, Listener
+		// Three type of actors - Master, RemoteMaster, Worker
 		class Master(nrOfWorkers: Int, targetZeroes: Int)
 			extends Actor{
 
@@ -47,29 +43,21 @@ object project1 {
 					}
 
 				case WorkDone(list: StringBuilder) =>
-					// if(timer){
-						println("Appending worker's found bitcoins")
-						masterList.append(list)
-						inc = inc+1
-						sender ! StartWork((inc-1)*worksize,(inc)*worksize)
-					// }
+					print("..")
+					masterList.append(list)
+					inc = inc+1
+					sender ! StartWork((inc-1)*worksize,(inc)*worksize)
 
 				case SendTargetZeros() =>
 					sender ! StartMining(targetZeroes)
 
 				case Consolidate(list: StringBuilder) =>
-					// if(timer) {
-						masterList.append(list)
-					// }
+					masterList.append(list)
 					
 				case "STOP" =>
-					// timer = false
-					// for(actor <- actorList){
-					// 	actor ! PoisonPill
-					// }
 					println(masterList)
+					println("\n========== Toal BitCoins : " + count + " ==========")
 					context.system.shutdown()
-					// listener ! PrintBitcoins(masterList)
 					
 			}
 		}
@@ -94,17 +82,11 @@ object project1 {
 						inc = inc+1
 					}
 				case RemoteWorkDone(list: StringBuilder) =>
-					// if(timer){
-						masterList.append(list)
-						inc = inc+1
-						sender ! StartWork((inc-1)*worksize,(inc)*worksize)
-					// }
+					masterList.append(list)
+					inc = inc+1
+					sender ! StartWork((inc-1)*worksize,(inc)*worksize)
 
 				case "REMOTE_STOP" =>
-					// timer = false
-					// for(actor <- actorList){
-					// 	actor ! PoisonPill
-					// }
 					val masterActor = context.actorFor("akka.tcp://RemoteMasterSystem@" + ipAddress + ":2552/user/master")
 					masterActor ! Consolidate(masterList)
 					context.system.shutdown()
@@ -120,7 +102,8 @@ object project1 {
 						var str = "sdarsha".concat(Integer.toString(i,36))
 						var crypted = sha256(str)
 						if(hasZeroes(crypted,targetzeroes)){
-							list.append(crypted)
+							count = count + 1;
+							list.append(str + " : " + crypted + "\n")
 						}
 					}
 					sender ! WorkDone(list)
@@ -151,21 +134,6 @@ object project1 {
 				}
 			}
 			found
-		}
-
-		class Listener extends Actor{
-			def receive = {
-				case PrintBitcoins(masterList: StringBuilder) => 
-					sender ! PoisonPill
-					println(masterList)
-					context.system.shutdown()
-
-				case ShutDown(masterList: StringBuilder, ipAddress: String) =>
-					val masterActor = context.actorFor("akka.tcp://RemoteMasterSystem@" + ipAddress + ":2552/user/master")
-					masterActor ! Consolidate(masterList)
-					sender ! PoisonPill
-					context.system.shutdown()
-			}
 		}
 
 		 val MasterConfig = ConfigFactory.parseString("""akka{
@@ -209,13 +177,9 @@ object project1 {
 			// val master = system.actorOf(Props(new Master(4,4, listener), name = "master"))
 			//Scheduler to give STOP command after 2 min
 			import system.dispatcher
-			system.scheduler.scheduleOnce(100000 milliseconds, master, "STOP")
+			system.scheduler.scheduleOnce(180000 milliseconds, master, "STOP")
 			println("Starting Master")
 			master ! SearchBitcoins()
 		}
-	}
-
-	
-
-	
+	}	
 }
