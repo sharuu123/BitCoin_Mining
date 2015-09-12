@@ -170,7 +170,7 @@ object project1 {
 			val remotemaster = system.actorOf(Props(new RemoteMaster(nrOfWorkers,args(0))), name = "remotemaster")
 			
 			import system.dispatcher
-			system.scheduler.scheduleOnce(300000 milliseconds, remotemaster, "REMOTE_STOP")
+			system.scheduler.scheduleOnce(100000 milliseconds, remotemaster, "REMOTE_STOP")
 			remotemaster ! AskMaster()
 		} else {
 			val nrOfWorkers: Int = Runtime.getRuntime().availableProcessors()
