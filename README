@@ -1,0 +1,88 @@
+COP 5615
+
+Project 1 - Bitcoin Mining
+
+Name 						UFID
+Sarojini Garapati 			
+Sharath chandra Darsha 		4519-4064
+
+Instructions to run the code:
+
+1) Go to the directory containing project1.scala and build.sbt
+2) Run "sbt"
+3) Run "run 4" // here 4 is the number of zeros in the bitcoin generated
+4) Go to the remote laptop directory containing project1.scala
+5) Run "sbt"
+6) Run "run 192.168.2.3" // here instead of target zeros, enter the ip address of master
+
+How to calculate cpu usage:
+
+1) Run "time sbt run 4"
+- At the end of the program, it dispays real, user and sys time. cpu usage is (user+sys)/real
+
+Results:
+
+1) Optimal worksize = 1000000
+
+2) result of project1.scala 4
+
+sarojini@sarojini-Lenovo-G50-70:~/Desktop/project$ time sbt 
+[info] Set current project to My Project (in build file:/home/sarojini/Desktop/project/)
+> run 4
+[info] Running project1 4
+[INFO] [09/13/2015 16:30:41.768] [run-main-0] [Remoting] Starting remoting
+[INFO] [09/13/2015 16:30:41.934] [run-main-0] [Remoting] Remoting started; listening on addresses :[akka.tcp://MasterSystem@192.168.0.111:2552]
+[INFO] [09/13/2015 16:30:41.937] [run-main-0] [Remoting] Remoting now listens on addresses: [akka.tcp://MasterSystem@192.168.0.111:2552]
+Starting Master
+No of workers spawned is 4
+........................................sdarsha182lt : 000097a3188f22e934c4274a8dad16bd4217210bb4597c32b5f14678431b6b68
+sdarsha183rk : 00007119d9d17681935665900a5c601003fd0ea4344bb3646b62ec6c1b17d7f7
+sdarsha18yfz : 0000de3163c6bac77e948ac2ad802f230c9a520c1387032f4ad31166159d7f0d
+sdarsha194th : 000075c1eb80d12e2c1dd0f7422c6f20b3cda1beeae354f00395357ad4676ee2
+sdarsha1ah7c : 00006449b5cfd956f2acba5d4c26177ad590fe615cb14b06a2b25920ab5ba586
+...........
+...........
+...........
+...........
+sdarshab5h23 : 0000ac051c071f044881c7a64caa8e47b9e6fc86b7bfacc545cf57e8bea07bee
+sdarshaba5lv : 00002d300ad4ffcee6be1b992bd8c288cd7676e62ffd250b7daf5335a8ee931c
+sdarshabaeis : 000085c1bda683e127a92013e7ea79620c5d991d6573661b234130ba3b018a59
+sdarshabatx3 : 0000963e04db6b7352cfe5d07292876b761099ac41429524c089e91b157b8324
+sdarshabax2f : 00008bf818d11725b9c71eddd5cb8ef3dc577e68bb9f822ec703d861fca60274
+
+
+************ Total BitCoins Found : 348 ***************
+************ Mining time on this device : 30044 milliseconds ***************
+[INFO] [09/13/2015 16:31:15.639] [MasterSystem-akka.actor.default-dispatcher-3] [akka://MasterSystem/user/master] Message [project1$WorkDone$3] from Actor[akka://MasterSystem/user/master/$d#-1027000933] to Actor[akka://MasterSystem/user/master#-398779767] was not delivered. [1] dead letters encountered. This logging can be turned off or adjusted with configuration settings 'akka.log-dead-letters' and 'akka.log-dead-letters-during-shutdown'.
+[INFO] [09/13/2015 16:31:15.639] [MasterSystem-akka.actor.default-dispatcher-3] [akka://MasterSystem/user/master] Message [project1$WorkDone$3] from Actor[akka://MasterSystem/user/master/$c#1262735100] to Actor[akka://MasterSystem/user/master#-398779767] was not delivered. [2] dead letters encountered. This logging can be turned off or adjusted with configuration settings 'akka.log-dead-letters' and 'akka.log-dead-letters-during-shutdown'.
+[INFO] [09/13/2015 16:31:15.639] [MasterSystem-akka.actor.default-dispatcher-3] [akka://MasterSystem/user/master] Message [project1$WorkDone$3] from Actor[akka://MasterSystem/user/master/$b#-833881] to Actor[akka://MasterSystem/user/master#-398779767] was not delivered. [3] dead letters encountered. This logging can be turned off or adjusted with configuration settings 'akka.log-dead-letters' and 'akka.log-dead-letters-during-shutdown'.
+[INFO] [09/13/2015 16:31:15.639] [MasterSystem-akka.actor.default-dispatcher-3] [akka://MasterSystem/user/master] Message [project1$WorkDone$3] from Actor[akka://MasterSystem/user/master/$a#-489750764] to Actor[akka://MasterSystem/user/master#-398779767] was not delivered. [4] dead letters encountered. This logging can be turned off or adjusted with configuration settings 'akka.log-dead-letters' and 'akka.log-dead-letters-during-shutdown'.
+[INFO] [09/13/2015 16:31:15.642] [MasterSystem-akka.remote.default-remote-dispatcher-5] [akka.tcp://MasterSystem@192.168.0.111:2552/system/remoting-terminator] Shutting down remote daemon.
+[INFO] [09/13/2015 16:31:15.643] [MasterSystem-akka.remote.default-remote-dispatcher-5] [akka.tcp://MasterSystem@192.168.0.111:2552/system/remoting-terminator] Remote daemon shut down; proceeding with flushing remote transports.
+[INFO] [09/13/2015 16:31:15.672] [ForkJoinPool-3-worker-7] [Remoting] Remoting shut down
+[INFO] [09/13/2015 16:31:15.673] [MasterSystem-akka.remote.default-remote-dispatcher-6] [akka.tcp://MasterSystem@192.168.0.111:2552/system/remoting-terminator] Remoting shut down.
+[success] Total time: 35 s, completed Sep 13, 2015 4:31:15 PM
+> 
+real	0m40.973s
+user	2m17.373s
+sys	0m0.676s
+
+3) the system has 4 cores
+   cpu time = 138.059
+   real time = 40.973
+
+   cpu usage = 138.059/40.973 = 3.369
+
+4) The coin with the most zeros is with 6 zeros and ran for two minutes
+
+No of workers spawned is 4
+
+bitcoins:
+sdarsha3kfsq : 00000021d127659cf86a780a050883dbe9ad82c688f0ab1f40ac76d6a0d81195
+sdarshaiwwb6 : 0000008352a34817f9584c7756593efa1e71b93bb8d0f4d4dafc3f3498778be9
+
+************ Total BitCoins Found : 2 ***************
+************ Mining time on this device : 120017 milliseconds ***************
+
+5) Largest number of working machines is 2 with 4 and 4 cores respectively
+
