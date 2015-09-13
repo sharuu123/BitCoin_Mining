@@ -68,7 +68,7 @@ object project1 {
 			var masterList = new StringBuilder("": String)
 			var inc: Int = _
 			val starttime: Long = System.currentTimeMillis
-			val worksize: Int = 20000
+			val worksize: Int = 1000000
 			val masterActor = context.actorFor("akka.tcp://MasterSystem@" + ipAddress + ":2552/user/master")
 
 			def receive = {
@@ -145,7 +145,7 @@ object project1 {
 				remote{
 					enabled-transports = ["akka.remote.netty.tcp"]
 					netty.tcp {
-						hostname = "192.168.0.111"
+						hostname = "192.168.0.103"
 						port = 2552
 					}
 				}
@@ -168,7 +168,7 @@ object project1 {
 			val remotemaster = system.actorOf(Props(new RemoteMaster(nrOfWorkers,args(0))), name = "remotemaster")
 			//Scheduler to give STOP command after 2 min
 			import system.dispatcher
-			system.scheduler.scheduleOnce(60000 milliseconds, remotemaster, "STOP")
+			system.scheduler.scheduleOnce(30000 milliseconds, remotemaster, "STOP")
 			remotemaster ! AskMaster()
 		} else {
 			val nrOfWorkers: Int = Runtime.getRuntime().availableProcessors()
@@ -176,7 +176,7 @@ object project1 {
 			val master = system.actorOf(Props(new Master(nrOfWorkers,args(0).toInt)), name = "master")
 			//Scheduler to give STOP command after 3 min
 			import system.dispatcher
-			system.scheduler.scheduleOnce(600000 milliseconds, master, "STOP")
+			system.scheduler.scheduleOnce(120000 milliseconds, master, "STOP")
 			println("Starting Master")
 			master ! SearchBitcoins()
 		}

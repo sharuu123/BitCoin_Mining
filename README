@@ -86,3 +86,16 @@ sdarshaiwwb6 : 0000008352a34817f9584c7756593efa1e71b93bb8d0f4d4dafc3f3498778be9
 
 5) Largest number of working machines is 2 with 4 and 4 cores respectively
 
+run time on machine 1 = 70.20
+cpu time on machine 1 = 247.35
+cpu usage = 3.52
+bitcoins found on machine 1 = 671
+
+run time on machine 2 = 47.117
+cpu time on machine 2 = 128.298
+cpu usage = 2.72
+bitcoins found on machine 2 = 361
+
+total bitcoins found = 1032
+average cpu usage over two machines = (3.52+2.72)/2 = 3.124
+
