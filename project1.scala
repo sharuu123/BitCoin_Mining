@@ -71,7 +71,7 @@ object project1 {
 			var inc: Int = _
 			val starttime: Long = System.currentTimeMillis
 			val worksize: Int = 1000000
-			val masterActor = context.actorFor("akka.tcp://RemoteMasterSystem@" + ipAddress + ":2552/user/master")
+			val masterActor = context.actorFor("akka.tcp://MasterSystem@" + ipAddress + ":2552/user/master")
 
 			def receive = {
 				case AskMaster() =>
@@ -79,18 +79,20 @@ object project1 {
 					masterActor ! SendTargetZeros()
 
 				case StartMining(targetZeroes: Int) => 
+					println("start mining")
 					for(i <- 0 until nrOfWorkers) {
 						val act = context.actorOf(Props(new Worker(targetZeroes))) ! StartWork(inc*worksize,(inc+1)*worksize)
 						// actorList += act
 						inc = inc+1
 					}
-				case RemoteWorkDone(list: StringBuilder) =>
+				case WorkDone(list: StringBuilder) =>
+					print("..")
 					masterList.append(list)
 					inc = inc+1
 					sender ! StartWork((inc-1)*worksize,(inc)*worksize)
 
 				case "REMOTE_STOP" =>
-					val masterActor = context.actorFor("akka.tcp://RemoteMasterSystem@" + ipAddress + ":2552/user/master")
+					val masterActor = context.actorFor("akka.tcp://MasterSystem@" + ipAddress + ":2552/user/master")
 					masterActor ! Consolidate(masterList,count)
 					context.system.shutdown()
 			}
@@ -170,7 +172,7 @@ object project1 {
 			val remotemaster = system.actorOf(Props(new RemoteMaster(nrOfWorkers,args(0))), name = "remotemaster")
 			
 			import system.dispatcher
-			system.scheduler.scheduleOnce(100000 milliseconds, remotemaster, "REMOTE_STOP")
+			system.scheduler.scheduleOnce(300000 milliseconds, remotemaster, "REMOTE_STOP")
 			remotemaster ! AskMaster()
 		} else {
 			val nrOfWorkers: Int = Runtime.getRuntime().availableProcessors()
